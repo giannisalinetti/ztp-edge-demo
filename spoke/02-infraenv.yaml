@@ -1,0 +1,19 @@
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  labels:
+    agentclusterinstalls.extensions.hive.openshift.io/location: "PUT LOCATION"
+    networkType: dhcp
+  name: "PUT NAME"
+  namespace: "PUT NAMESPACE NAME"
+spec:
+  agentLabels:
+    agentclusterinstalls.extensions.hive.openshift.io/location: "PUT LOCATION"
+  cpuArchitecture: x86_64
+  ipxeScriptType: DiscoveryImageAlways
+  nmStateConfigLabelSelector:
+    matchLabels:
+      infraenvs.agent-install.openshift.io: "PUT NAME INFRAENV"
+  pullSecretRef:
+    name: "PUT PULL SECRET NAME"
+  sshAuthorizedKey: "PUT SSH PUB KEY"
