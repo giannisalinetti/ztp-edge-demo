@@ -1,0 +1,33 @@
+- name: Sushy Tools installation playbook
+  hosts: localhost
+  vars_files:
+    - vars.yaml
+  become: true
+  tasks:
+    - name: Install sushy-tools package
+      ansible.builtin.pip:
+        name: "{{ item }}"
+        virtualenv: "{{ sushy_venv }}"
+      loop: "{{ pip_packages }}"
+      
+    - name: Template out Sushy emulator config
+      ansible.builtin.template:
+        src: templates/sushy-emulator.conf.j2
+        dest: "{{ sushy_venv }}/sushy-emulator.conf"
+        mode: 0644
+        owner: root
+        group: root
+
+    - name: Template out Sushy tools service
+      ansible.builtin.template:
+        src: templates/sushy-tools.service.j2
+        dest: /etc/systemd/system/sushy-tools.service
+        mode: 0644
+        owner: root
+        group: root
+
+    - name: Enable and start sushy-tools service
+      ansible.builtin.systemd:
+        name: sushy-tools.service
+        enabled: true
+        state: started  

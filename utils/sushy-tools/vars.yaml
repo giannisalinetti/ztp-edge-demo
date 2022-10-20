@@ -1,0 +1,6 @@
+---
+sushy_emulator_listen_ip: "192.168.122.1"
+sushy_venv: /opt/sushy-tools
+pip_packages:
+  - sushy-tools
+  - libvirt-python
