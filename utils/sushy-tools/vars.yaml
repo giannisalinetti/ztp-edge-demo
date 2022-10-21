@@ -1,5 +1,7 @@
 ---
+# The ip address of the virtual network bridge where sushy should listen to (ex: virbr1)
 sushy_emulator_listen_ip: "192.168.122.1"
+# The virtualenv path where package should be installed
 sushy_venv: /opt/sushy-tools
 pip_packages:
   - sushy-tools
