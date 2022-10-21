@@ -18,6 +18,19 @@
         msg: "Package qemu-kvm is not installed"
       when: '"qemu-kvm" not in ansible_facts.packages'
 
+    - name: Define dedicated network
+      community.libvirt.virt_net:
+        command: define
+        name: "{{ net_name }}"
+        xml: '{{ lookup("template", "templates/bridge.xml.j2") }}'
+      when: define_custom_net
+
+    - name: Start dedicated network
+      community.libvirt.virt_net:
+        command: start
+        name: "{{ net_name }}"
+      when: define_custom_net
+
     - name: Install sushy-tools package
       ansible.builtin.pip:
         name: "{{ item }}"
@@ -44,4 +57,11 @@
       ansible.builtin.systemd:
         name: sushy-tools.service
         enabled: true
-        state: started  
+        state: restarted  
+    
+    - name: Test Redfish APIs 
+      ansible.builtin.uri:
+        url: "http://{{ sushy_emulator_listen_ip }}:{{ sushy_emulator_listen_port }}/redfish/v1/Systems"
+        method: GET
+        return_content: no
+      register: redfish_get
