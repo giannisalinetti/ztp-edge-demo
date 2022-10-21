@@ -4,6 +4,20 @@
     - vars.yaml
   become: true
   tasks:
+    - name: Populate package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Fail if libvirt package is not installed
+      fail:
+        msg: "Package libvirt is not installed"
+      when: '"libvirt" not in ansible_facts.packages'
+    
+    - name: Fail if libvirt package is not installed
+      fail:
+        msg: "Package qemu-kvm is not installed"
+      when: '"qemu-kvm" not in ansible_facts.packages'
+
     - name: Install sushy-tools package
       ansible.builtin.pip:
         name: "{{ item }}"
