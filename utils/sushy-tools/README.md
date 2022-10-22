@@ -19,7 +19,11 @@ net_prefix: "192.168.100"
 net_ip: "{{ net_prefix }}.1"
 ```
 
-It is possible to also add a custom network for the lab with the `define_custom_net: true` option. 
+The variables above populate the `sushy_emulator_listen_ip` variable. If undefined, its default value is
+"192.168.122.1" (the default libvirt network on Fedora/RHEL/CentOS).
+
+### Create custom network
+It is possible to also create a custom network for the lab with the `define_custom_net: true` option. 
 This task will create a custom bridge and related network config.
 The previous `net_prefix` and `net_ip` variables are still mandatory and users must choose from
 a free network prefix.
@@ -44,3 +48,11 @@ sushy_admin_user: "myuser"
 sushy_admin_password: "baremeta1Rule5"
 ```
 
+## Customizing certificates
+The playbook purpose is to define a lab environment to test ZTP automation on VMs managed via
+RedFish. For this reason self signed certificates are generated and used and there is no roadmap
+to support alternatives like LetsEncript in this automation.
+However, it is possible to customize the CN used to generate the CR with the variable:
+```
+csr_common_name: "yourcompany.com"
+```
