@@ -10,11 +10,14 @@ SUSHY_EMULATOR_LISTEN_PORT = {{ sushy_emulator_listen_port }}
 
 # Serve this SSL certificate to the clients
 # SUSHY_EMULATOR_SSL_CERT = u'sushy.cert'
-SUSHY_EMULATOR_SSL_CERT = None
+SUSHY_EMULATOR_SSL_CERT = u'{{ sushy_venv}}/{{ x509_certificate }}'
 
 # If SSL certificate is being served, this is its RSA private key
 # SUSHY_EMULATOR_SSL_KEY = u'sushy.key'
-SUSHY_EMULATOR_SSL_KEY = None
+SUSHY_EMULATOR_SSL_KEY = u'{{ sushy_venv }}/{{ openssl_private_key }}'
+
+# Htpasswd file to manage authenticated sessions
+SUSHY_EMULATOR_AUTH_FILE = u'{{sushy_venv}}/htpasswd'
 
 # The OpenStack cloud ID to use. This option enables OpenStack driver.
 SUSHY_EMULATOR_OS_CLOUD = None

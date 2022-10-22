@@ -36,7 +36,35 @@
         name: "{{ item }}"
         virtualenv: "{{ sushy_venv }}"
       loop: "{{ pip_packages }}"
-      
+
+    - name: Generate private key
+      community.crypto.openssl_privatekey:
+        path: "{{ sushy_venv }}/{{ openssl_private_key }}"
+
+    - name: Generate certificate signing request
+      community.crypto.openssl_csr:
+        path: "{{ sushy_venv }}/{{ openssl_csr }}"
+        privatekey_path: "{{ sushy_venv }}/{{ openssl_private_key }}"
+        common_name: "{{ csr_common_name }}"
+
+    - name: Generate certificate
+      community.crypto.x509_certificate:
+        path: "{{ sushy_venv }}/{{ x509_certificate }}"
+        privatekey_path: "{{ sushy_venv }}/{{ openssl_private_key }}"
+        csr_path: "{{ sushy_venv }}/{{ openssl_csr }}"
+        provider: selfsigned      
+
+    - name: Generate htpasswd
+      community.general.htpasswd:
+        path: "{{ sushy_venv }}/htpasswd"
+        name: "{{ sushy_admin_user }}"
+        password: "{{ sushy_admin_password }}"
+        crypt_scheme: bcrypt
+        owner: root
+        group: root
+        mode: 0640 
+        state: present 
+
     - name: Template out Sushy emulator config
       ansible.builtin.template:
         src: templates/sushy-emulator.conf.j2
@@ -61,7 +89,11 @@
     
     - name: Test Redfish APIs 
       ansible.builtin.uri:
-        url: "http://{{ sushy_emulator_listen_ip }}:{{ sushy_emulator_listen_port }}/redfish/v1/Systems"
+        url: "https://{{ sushy_emulator_listen_ip }}:{{ sushy_emulator_listen_port }}/redfish/v1/Systems"
         method: GET
+        user: "{{ sushy_admin_user }}"
+        password: "{{ sushy_admin_password }}"
+        force_basic_auth: yes
         return_content: no
+        validate_certs: no
       register: redfish_get
