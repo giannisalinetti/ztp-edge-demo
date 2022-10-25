@@ -1,0 +1,13 @@
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  annotations:
+    apps.open-cluster-management.io/reconcile-rate: medium
+  name: ggithubcom-giannisalinetti-ztp-edge-demo
+  namespace: ztp-sno
+spec:
+  pathname: https://github.com/giannisalinetti/ztp-edge-demo.git
+  secretRef:
+    name: ggithubcom-giannisalinetti-ztp-edge-demo-auth
+  type: Git
